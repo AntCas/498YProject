@@ -92,6 +92,7 @@ int main (int argc, char *argv[]) {
     YansWifiPhyHelper phy = YansWifiPhyHelper::Default ();
     phy.SetChannel (channel.Create ());
     WifiHelper wifi;
+	wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
     wifi.SetRemoteStationManager ("ns3::AarfWifiManager");
     
     NqosWifiMacHelper mac = NqosWifiMacHelper::Default ();
@@ -114,10 +115,10 @@ int main (int argc, char *argv[]) {
     
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
     positionAlloc->Add (Vector (0.0, 0.0, 0.0));
-    positionAlloc->Add (Vector (115.0, 0.0, 0.0));
-    positionAlloc->Add (Vector (-115.0, 0.0, 0.0));
-    positionAlloc->Add (Vector (0.0, 115.0, 0.0));
-    positionAlloc->Add (Vector (0.0, -115.0, 0.0));
+    positionAlloc->Add (Vector (100.0, 0.0, 0.0));
+    positionAlloc->Add (Vector (-100.0, 0.0, 0.0));
+    positionAlloc->Add (Vector (0.0, 100.0, 0.0));
+    positionAlloc->Add (Vector (0.0, -100.0, 0.0));
     mobility.SetPositionAllocator (positionAlloc);
     
     
