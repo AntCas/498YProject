@@ -27,6 +27,8 @@
 #include "ns3/wifi-module.h"
 #include "ns3/athstats-helper.h"
 
+#include "ns3/data-rate.h"
+
 #include <iostream>
 
 using namespace ns3;
@@ -210,15 +212,26 @@ int main (int argc, char *argv[])
 
   OnOffHelper onoff ("ns3::PacketSocketFactory", Address (socket));
   onoff.SetConstantRate (DataRate ("100kb/s"));
+  ApplicationContainer oo_apps = onoff.Install (stas.Get (0));
+  oo_apps.Start (Seconds (0.1));
+  oo_apps.Stop (Seconds (10.0));
 
-  ApplicationContainer apps = onoff.Install (stas.Get (0));
-  apps.Start (Seconds (0.1));
-  apps.Stop (Seconds (10.0));
+  uint16_t sinkPort = 8080;
+  //PacketSinkHelper ps("ns3::UdpSocketFactory", Address(socket));
+  PacketSinkHelper ps("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), sinkPort));
+  ApplicationContainer ps_app = ps.Install(stas.Get(1));
+
+  ApplicationContainer all_apps;
+  all_apps.Add(oo_apps);
+  //all_apps.Add(ps_app);
+  all_apps.Start (Seconds (0.1));
+  all_apps.Stop (Seconds (10.0));
+
 
   Simulator::Stop (Seconds (4.0));
 
   //Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacTx", MakeCallback (&DevTxTrace));
-  //Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacRx", MakeCallback (&DevRxTrace));
+  Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacRx", MakeCallback (&DevRxTrace));
   //Config::Connect ("/NodeList/*/DeviceList/*/Phy/State/RxOk", MakeCallback (&PhyRxOkTrace));
   //Config::Connect ("/NodeList/*/DeviceList/*/Phy/State/RxError", MakeCallback (&PhyRxErrorTrace));
   //Config::Connect ("/NodeList/*/DeviceList/*/Phy/State/Tx", MakeCallback (&PhyTxTrace));
