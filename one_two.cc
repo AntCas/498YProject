@@ -16,9 +16,12 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("PartOne");
 
+static int g_cbr = 500;
+static bool g_do_rts = false;
+static int g_seconds = 10;
+
 
 static int num_pkts = 0;
-
 static void udp_rx(std::string path, Ptr<const Packet> p, const Address &addr) {
   //std::cout << p->GetSize() << std::endl;
   Time t (Simulator::Now());
@@ -26,9 +29,27 @@ static void udp_rx(std::string path, Ptr<const Packet> p, const Address &addr) {
   num_pkts++;
 }
 
-int main() {
+
+int main(int argc, char** argv) {
+  CommandLine cmd;
+  cmd.AddValue("cbr", "Constant Bit Rate (kb/s)", g_cbr);
+  cmd.AddValue("do_rts", "Enable RTS/CTS", g_do_rts);
+  cmd.AddValue("seconds", "How long to run simulation", g_seconds);
+  cmd.Parse(argc, argv);
+
+  printf(" **** \n   Running for %d seconds with %dkb/s cbr and %s \n ****\n\n",
+    g_seconds, g_cbr,
+    g_do_rts ? "RTS enabled" : "RTS disabled");
+
+
   std::cout << "Main starting.\n";
-  //Time::SetResolution(Time::NS);
+  Time::SetResolution(Time::NS);
+  
+  Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("2200"));
+  if (g_do_rts)
+    Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("0"));
+  else
+    Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("999999999"));
 
 
   /*
@@ -57,7 +78,10 @@ int main() {
 
   //WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
-  wifi.SetRemoteStationManager("ns3::AarfWifiManager");
+  wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
+  wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",
+    "DataMode",StringValue ("DsssRate2Mbps"), 
+    "ControlMode",StringValue ("DsssRate1Mbps"));
   WifiMacHelper mac;
 
   NS_LOG_INFO("SSID.");
@@ -75,25 +99,24 @@ int main() {
 
   // Positioning
   MobilityHelper mobility;
-  //mobility.SetPositionAllocator("ns3::GridPositionAllocator",
-  //  "MinX", DoubleValue (0.0),
-  //  "MinY", DoubleValue (0.0),
-  //  "DeltaX", DoubleValue (10.0),
-  //  "DeltaY", DoubleValue (10.0),
-  //  "GridWidth", UintegerValue (2),
-  //  "LayoutType", StringValue ("RowFirst"));
+  mobility.SetPositionAllocator("ns3::GridPositionAllocator",
+    "MinX", DoubleValue (0.0),
+    "MinY", DoubleValue (0.0),
+    "DeltaX", DoubleValue (10.0),
+    "DeltaY", DoubleValue (10.0),
+    "GridWidth", UintegerValue (2),
+    "LayoutType", StringValue ("RowFirst"));
   mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   mobility.Install(staNodes);
-  //mobility.SetPositionAllocator("ns3::GridPositionAllocator",
-  //  "MinX", DoubleValue (5.0),
-  //  "MinY", DoubleValue (5.0),
-  //  "DeltaX", DoubleValue (10.0),
-  //  "DeltaY", DoubleValue (10.0),
-  //  "GridWidth", UintegerValue (1),
-  //  "LayoutType", StringValue ("RowFirst"));
+  mobility.SetPositionAllocator("ns3::GridPositionAllocator",
+    "MinX", DoubleValue (5.0),
+    "MinY", DoubleValue (5.0),
+    "DeltaX", DoubleValue (10.0),
+    "DeltaY", DoubleValue (10.0),
+    "GridWidth", UintegerValue (1),
+    "LayoutType", StringValue ("RowFirst"));
   mobility.Install(apNodes);
 
-  /*
   // Protocol stack
   NS_LOG_INFO("Stack.");
   InternetStackHelper stack;
@@ -101,10 +124,27 @@ int main() {
   stack.Install(apNodes);
 
   Ipv4AddressHelper addr;
-  addr.SetBase("10.1.1.0", "255.255.255.0");
+  addr.SetBase("10.0.0.0", "255.255.255.0");
   addr.Assign(staDevices);
   addr.Assign(apDevices);
-  */
+
+  int port = 12345;
+  OnOffHelper onoff("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port)); // to node 1
+  onoff.SetAttribute ("PacketSize", UintegerValue (2000));
+  onoff.SetConstantRate(DataRate( std::to_string(g_cbr) + "kb/s"));
+  ApplicationContainer apps = onoff.Install(staNodes.Get(0)); // from node 0
+  apps.Start(Seconds(0.0));
+  apps.Stop(Seconds((int)g_seconds));
+
+  Simulator::Stop(Seconds((int)g_seconds + 5));
+
+  NS_LOG_INFO("Sock Sink.");
+  PacketSinkHelper sink = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port));
+  apps.Add( sink.Install(staNodes.Get(1)) );
+  apps.Start(Seconds(0.0));
+  apps.Stop(Seconds((int)g_seconds));
+
+  /*
   PacketSocketHelper psh;
   psh.Install(staNodes);
   psh.Install(apNodes);
@@ -113,21 +153,23 @@ int main() {
   PacketSocketAddress sock;
   sock.SetSingleDevice(staDevices.Get(0)->GetIfIndex());
   sock.SetPhysicalAddress(staDevices.Get(1)->GetAddress());
-  //sock.SetProtocol(17);
+  sock.SetProtocol(17);
 
-  OnOffHelper onoff("ns3::PacketSocketFactory", Address(sock));
+  OnOffHelper onoff("ns3::UdpSocketFactory", Address(sock));
+  onoff.SetAttribute ("PacketSize", UintegerValue (2000));
   onoff.SetConstantRate(DataRate("500kb/s"));
   ApplicationContainer apps = onoff.Install(staNodes.Get(0));
   apps.Start(Seconds(1.0));
-  apps.Stop(Seconds(10.0));
+  apps.Stop(Seconds(5.0));
 
-  Simulator::Stop(Seconds(21.0));
+  Simulator::Stop(Seconds(10.0));
 
   NS_LOG_INFO("Sock Sink.");
-  PacketSinkHelper sink = PacketSinkHelper("ns3::PacketSocketFactory", sock);
-  apps = sink.Install(staNodes.Get(1));
+  //PacketSinkHelper sink = PacketSinkHelper("ns3::UdpSocketFactory", sock);
+  //apps = sink.Install(staNodes.Get(1));
   apps.Start(Seconds(0.0));
-  apps.Stop(Seconds(20.0));
+  apps.Stop(Seconds(10.0));
+  */
 
   Config::Connect("/NodeList/*/ApplicationList/*/$ns3::PacketSink/Rx", MakeCallback(&udp_rx));
 
@@ -135,6 +177,5 @@ int main() {
   Simulator::Destroy();
 
   NS_LOG_INFO("Done!");
-
 }
 
