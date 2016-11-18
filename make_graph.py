@@ -5,14 +5,19 @@ from matplotlib import pyplot as plt
 data = []
 xs,ys = [],[]
 
-for line in sys.stdin.readlines():
-    if "^" in line:
-        seqn,t = re.match("(\d+)\^\+(\d+\.\d+)ms",line).groups()
-        #data.append( (seqn,t) )
-        xs.append(seqn)
-        ys.append(t)
+fs = sys.argv[1:]
+print(fs)
+
+for fname in fs:
+    if "xml" in fname:
+        for line in open(fname).readlines():
+            if "rxPackets" in line:
+                t = re.match(".*rxPackets=\"(\d+)\".*", line).groups()[0]
+                ys.append(t)
 
 #plt.scatter(data)
-plt.plot(xs,ys, '-')
+#plt.plot(xs,ys, '-')
+print(ys)
+plt.plot(ys)
 plt.show()
 
