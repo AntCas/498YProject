@@ -146,8 +146,20 @@ int main(int argc, char** argv) {
   Time::SetResolution(Time::NS);
   std::cout << "Main starting.\n";
 
-  for ( int ii = 1; ii < 10; ii++ ) {
-    run_experiment_1(true, 40 * (ii*20) * 1, 5, "log/" + std::to_string(ii));
+#define S 5 // seconds
+#define M 300 // freq
+#define L 25 // num loops
+  for ( int ii = 1; ii < L; ii++ ) {
+    if ( ii > L/2)
+      run_experiment_1(true, ii*M*4, S, "rtscts/" + std::to_string(ii));
+    else
+      run_experiment_1(true, ii*M, S, "rtscts/" + std::to_string(ii));
+  }
+  for ( int ii = 1; ii < L; ii++ ) {
+    if ( ii > L/2)
+      run_experiment_1(false, ii*M*4, S, "no_rtscts/" + std::to_string(ii));
+    else
+      run_experiment_1(false, ii*M, S, "no_rtscts/" + std::to_string(ii));
   }
   //run_experiment_1(true, 2000, 10, "yes_rts");
 
