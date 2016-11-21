@@ -4,12 +4,12 @@ from matplotlib import pyplot as plt
 
 
 
-def getAttrib( attrib , fs ):
+def getAttrib( flowID , attrib , fs ):
     ys = []
     for fname in fs:
         if "xml" in fname:
             for line in open(fname).readlines():
-                if attrib in line:
+                if attrib in line and 'flowId="' + flowID + '"' in line:
                     try:
                         t = re.match(".*" + attrib + "=\"(\d+)\".*", line).groups()[0]
                     except:
@@ -17,13 +17,16 @@ def getAttrib( attrib , fs ):
                     ys.append(float(t))
     return ys
 
-def main():
-
-    plt.subplot(121)
+def partA():
+    plt.subplot(221)
     # Plot throughputs first
-    rx0 = getAttrib( 'rxPackets' , map(lambda x: 'rtscts/' + x, os.listdir('./rtscts')) )
-    rx1 = getAttrib( 'rxPackets' , map(lambda x: 'no_rtscts/' + x, os.listdir('./no_rtscts')) )
-    x = map(lambda x: x*800, range(len(rx0)))
+    rx0 = getAttrib( 'rxPackets' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
+    rx1 = getAttrib( 'rxPackets' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
+
+    #x = map(lambda x: x*800, range(len(rx0)))
+    x = map(lambda x: x*200, range(len(rx0)/2))
+    x += ( map(lambda x: x*300*4, range(len(rx0)/2,len(rx0))) )
+
     plt.plot(x,rx0, label="RTS/CTS")
     plt.plot(x,rx1, label="No RTS/CTS")
 
@@ -34,10 +37,10 @@ def main():
 
     # Now plot delays
     plt.subplot(122)
-    y0 = getAttrib( 'delaySum' , map(lambda x: 'rtscts/' + x, os.listdir('./rtscts')) )
-    y1 = getAttrib( 'delaySum' , map(lambda x: 'no_rtscts/' + x, os.listdir('./no_rtscts')) )
-    tx0 = getAttrib( 'txPackets' , map(lambda x: 'rtscts/' + x, os.listdir('./rtscts')) )
-    tx1 = getAttrib( 'txPackets' , map(lambda x: 'no_rtscts/' + x, os.listdir('./no_rtscts')) )
+    y0 = getAttrib( 'delaySum' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
+    y1 = getAttrib( 'delaySum' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
+    tx0 = getAttrib( 'txPackets' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
+    tx1 = getAttrib( 'txPackets' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
     # compute average
     y0 = map(lambda ii: float(y0[ii]) / tx0[ii], range(len(y0)))
     y1 = map(lambda ii: float(y1[ii]) / tx1[ii], range(len(y1)))
@@ -58,4 +61,5 @@ def main():
 
     plt.show()
 
-main()
+partA()
+partB()
