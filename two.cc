@@ -140,29 +140,14 @@ int main(int argc, char** argv) {
   std::cout << "Main starting.\n";
 
 #define S 5 // seconds
-#define M 50 // freq
-#define MM 2 // freq
+#define M 150 // freq
 #define L 25 // num loops
 
-  int acc = 0;
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2) {
-      acc += M*MM;
-      run_experiment_2(true, acc, S, "rtscts/" + std::to_string(ii));
-    } else {
-      acc += M;
-      run_experiment_2(true, acc, S, "rtscts/" + std::to_string(ii));
-    }
+      run_experiment_2(true, ii*M, S, "rtscts/" + std::to_string(ii));
   }
-  acc = 0;
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2) {
-      acc += M*MM;
-      run_experiment_2(false, acc, S, "no_rtscts/" + std::to_string(ii));
-    } else { 
-      acc += M;
-      run_experiment_2(false, acc, S, "no_rtscts/" + std::to_string(ii));
-    }
+      run_experiment_2(false, ii*M, S, "no_rtscts/" + std::to_string(ii));
   }
 
 }
