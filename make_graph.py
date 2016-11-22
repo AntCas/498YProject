@@ -3,9 +3,17 @@ from matplotlib import pyplot as plt
 
 
 
+def mkX(n):
+    #x = map(lambda x: x*200, range(len(rx0)/2))
+    #x += ( map(lambda x: x*300*4, range(len(rx0)/2,len(rx0))) )
+    x = map(lambda x: x*4, range(n/2))
+    x += ( map(lambda x: x*4*5, range(n/2,n)) )
+    #x = range(n)
+    return x
 
 def getAttrib( flowID , attrib , fs ):
     ys = []
+    fs = sorted(fs, key=lambda s:int(filter( str.isdigit, s)))
     for fname in fs:
         if "xml" in fname:
             for line in open(fname).readlines():
@@ -18,14 +26,14 @@ def getAttrib( flowID , attrib , fs ):
     return ys
 
 def partA():
+    rtsdir = 'a_rtscts/'
+    nortsdir = 'a_no_rtscts/'
     plt.subplot(221)
     # Plot throughputs first
-    rx0 = getAttrib( 'rxPackets' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
-    rx1 = getAttrib( 'rxPackets' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
+    rx0 = getAttrib('1', 'rxPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    rx1 = getAttrib('1', 'rxPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
 
-    #x = map(lambda x: x*800, range(len(rx0)))
-    x = map(lambda x: x*200, range(len(rx0)/2))
-    x += ( map(lambda x: x*300*4, range(len(rx0)/2,len(rx0))) )
+    x = mkX(len(rx0))
 
     plt.plot(x,rx0, label="RTS/CTS")
     plt.plot(x,rx1, label="No RTS/CTS")
@@ -36,11 +44,11 @@ def partA():
     plt.legend(loc=4)
 
     # Now plot delays
-    plt.subplot(122)
-    y0 = getAttrib( 'delaySum' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
-    y1 = getAttrib( 'delaySum' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
-    tx0 = getAttrib( 'txPackets' , map(lambda x: 'a_rtscts/' + x, os.listdir('./a_rtscts')) )
-    tx1 = getAttrib( 'txPackets' , map(lambda x: 'a_no_rtscts/' + x, os.listdir('./a_no_rtscts')) )
+    plt.subplot(222)
+    y0 = getAttrib('1', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    y1 = getAttrib('1', 'delaySum' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    tx0 = getAttrib('1', 'txPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    tx1 = getAttrib('1', 'txPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
     # compute average
     y0 = map(lambda ii: float(y0[ii]) / tx0[ii], range(len(y0)))
     y1 = map(lambda ii: float(y1[ii]) / tx1[ii], range(len(y1)))
@@ -59,7 +67,61 @@ def partA():
     plt.ylabel("Delay Sum")
     plt.legend(loc=4)
 
-    plt.show()
+
+def partB():
+    rtsdir = 'b_rtscts/'
+    nortsdir = 'b_no_rtscts/'
+    plt.subplot(223)
+    # Plot throughputs first
+    rts0 = getAttrib('1', 'rxPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts0 = getAttrib('1', 'rxPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    rts1 = getAttrib('2', 'rxPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts1 = getAttrib('2', 'rxPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+
+    x = mkX(len(rts0))
+
+    plt.plot(x,rts0, label="RTS/CTS 1")
+    plt.plot(x,norts0, label="No RTS/CTS 1", )
+    plt.plot(x,rts1, label="RTS/CTS 2")
+    plt.plot(x,norts1, label="No RTS/CTS 2", )
+
+    plt.title("Throughput")
+    plt.xlabel("CBR")
+    plt.ylabel("Packets Recvd")
+    plt.legend(loc=4)
+
+    # Now plot delays
+    plt.subplot(224)
+    rts0 = getAttrib('1', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts0 = getAttrib('1', 'delaySum' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    rts1 = getAttrib('2', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts1 = getAttrib('2', 'delaySum' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    rts_tx0 = getAttrib('1', 'txPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts_tx0 = getAttrib('1', 'txPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    rts_tx1 = getAttrib('2', 'txPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    norts_tx1 = getAttrib('2', 'txPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    # compute average
+    rts0 = map(lambda ii: float(rts0[ii]) / rts_tx0[ii], range(len(rts0)))
+    norts0 = map(lambda ii: float(norts0[ii]) / norts_tx0[ii], range(len(norts0)))
+    rts1 = map(lambda ii: float(rts1[ii]) / rts_tx1[ii], range(len(rts1)))
+    norts1 = map(lambda ii: float(norts1[ii]) / norts_tx1[ii], range(len(norts1)))
+    #for i in range(len(y0)):
+    #    print("""  %d: 
+    #                  (rx0: %f)
+    #                  (rx1: %f)
+    #                  (y0: %f) (tx0: %f)
+    #                  (y1: %f) (tx1: %f)"""%(i,rx0[i],rx1[i],y0[i],tx0[i],y1[i],tx1[i]))
+
+    plt.plot(x,rts0, label="RTS/CTS 1")
+    plt.plot(x,norts0, label="No RTS/CTS 1")
+    plt.plot(x,rts0, label="RTS/CTS 2")
+    plt.plot(x,norts0, label="No RTS/CTS 2")
+
+    plt.title("Delay")
+    plt.xlabel("CBR")
+    plt.ylabel("Delay Sum")
+    plt.legend(loc=4)
 
 partA()
 partB()
+plt.show()
