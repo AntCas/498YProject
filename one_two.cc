@@ -132,7 +132,7 @@ void run_experiment_1a (bool do_rts, int cbr, int seconds, std::string log_name)
   NS_LOG_INFO("Done!");
 }
 
-void run_experiment_1a (bool do_rts, int cbr, int seconds, std::string log_name) {
+void run_experiment_1b (bool do_rts, int cbr, int seconds, std::string log_name) {
   g_cur_logs.open(log_name);
 
   printf(" **** Running for %d seconds with %dkb/s cbr and %s ****\n",
@@ -222,7 +222,6 @@ void run_experiment_1a (bool do_rts, int cbr, int seconds, std::string log_name)
 
 
   NS_LOG_INFO("Sock Sink.");
-  apps.Add( sink.Install(staNodes.Get(1)) );
   // CBR 1
   PacketSinkHelper sink = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port));
   apps.Add( sink.Install(staNodes.Get(1)) );
@@ -254,17 +253,30 @@ int main(int argc, char** argv) {
 #define L 25 // num loops
   for ( int ii = 1; ii < L; ii++ ) {
     if ( ii > L/2)
-      run_experiment_1(true, ii*M*MM, S, "rtscts/" + std::to_string(ii));
+      run_experiment_1a(true, ii*M*MM, S, "a_rtscts/" + std::to_string(ii));
     else
-      run_experiment_1(true, ii*M, S, "rtscts/" + std::to_string(ii));
+      run_experiment_1a(true, ii*M, S, "a_rtscts/" + std::to_string(ii));
   }
   for ( int ii = 1; ii < L; ii++ ) {
     if ( ii > L/2)
-      run_experiment_1(false, ii*M*MM, S, "no_rtscts/" + std::to_string(ii));
+      run_experiment_1a(false, ii*M*MM, S, "a_no_rtscts/" + std::to_string(ii));
     else
-      run_experiment_1(false, ii*M, S, "no_rtscts/" + std::to_string(ii));
+      run_experiment_1a(false, ii*M, S, "a_no_rtscts/" + std::to_string(ii));
   }
-  //run_experiment_1(true, 2000, 10, "yes_rts");
+
+
+  for ( int ii = 1; ii < L; ii++ ) {
+    if ( ii > L/2)
+      run_experiment_1b(true, ii*M*MM, S, "b_rtscts/" + std::to_string(ii));
+    else
+      run_experiment_1b(true, ii*M, S, "b_rtscts/" + std::to_string(ii));
+  }
+  for ( int ii = 1; ii < L; ii++ ) {
+    if ( ii > L/2)
+      run_experiment_1b(false, ii*M*MM, S, "b_no_rtscts/" + std::to_string(ii));
+    else
+      run_experiment_1b(false, ii*M, S, "b_no_rtscts/" + std::to_string(ii));
+  }
 
 }
 
