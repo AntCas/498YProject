@@ -6,9 +6,15 @@ from matplotlib import pyplot as plt
 def mkX(n):
     #x = map(lambda x: x*200, range(len(rx0)/2))
     #x += ( map(lambda x: x*300*4, range(len(rx0)/2,len(rx0))) )
-    x = map(lambda x: x*4, range(n/2))
-    x += ( map(lambda x: x*4*5, range(n/2,n)) )
-    #x = range(n)
+    x = []
+    acc = 0
+    for i in range(n):
+        if i < n/2:
+            acc += 50
+        else:
+            acc += 50*2
+        x.append(acc)
+
     return x
 
 def getAttrib( flowID , attrib , fs ):
