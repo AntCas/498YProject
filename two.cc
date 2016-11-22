@@ -70,7 +70,7 @@ void run_experiment_2 (bool do_rts, int cbr, int seconds, std::string log_name) 
 
   // Positioning
   // With TxGain:-3.0, falloff is around 40-60 meters
-  double d1= 40.0; // meters
+  double d1= 5.0; // meters
   double d2= 40.0; // meters
   MobilityHelper mobility;
   Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
