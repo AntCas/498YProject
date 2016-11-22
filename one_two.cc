@@ -57,6 +57,8 @@ void run_experiment_1a (bool do_rts, int cbr, int seconds, std::string log_name)
   YansWifiPhyHelper phy = YansWifiPhyHelper::Default();
   phy.SetChannel(chan.Create());
 
+  phy.Set("TxGain", DoubleValue(-3.0));
+
   //WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
   wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
@@ -248,33 +250,20 @@ int main(int argc, char** argv) {
   std::cout << "Main starting.\n";
 
 #define S 5 // seconds
-#define M 30 // freq
-#define MM 4 // freq
+#define M 150 // freq
 #define L 25 // num loops
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2)
-      run_experiment_1a(true, ii*M*MM, S, "a_rtscts/" + std::to_string(ii));
-    else
       run_experiment_1a(true, ii*M, S, "a_rtscts/" + std::to_string(ii));
   }
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2)
-      run_experiment_1a(false, ii*M*MM, S, "a_no_rtscts/" + std::to_string(ii));
-    else
       run_experiment_1a(false, ii*M, S, "a_no_rtscts/" + std::to_string(ii));
   }
 
 
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2)
-      run_experiment_1b(true, ii*M*MM, S, "b_rtscts/" + std::to_string(ii));
-    else
       run_experiment_1b(true, ii*M, S, "b_rtscts/" + std::to_string(ii));
   }
   for ( int ii = 1; ii < L; ii++ ) {
-    if ( ii > L/2)
-      run_experiment_1b(false, ii*M*MM, S, "b_no_rtscts/" + std::to_string(ii));
-    else
       run_experiment_1b(false, ii*M, S, "b_no_rtscts/" + std::to_string(ii));
   }
 

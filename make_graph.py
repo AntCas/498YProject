@@ -6,9 +6,10 @@ from matplotlib import pyplot as plt
 def mkX(n):
     #x = map(lambda x: x*200, range(len(rx0)/2))
     #x += ( map(lambda x: x*300*4, range(len(rx0)/2,len(rx0))) )
-    x = map(lambda x: x*30, range(n/2))
-    x += ( map(lambda x: x*30*4, range(n/2,n)) )
+    #x = map(lambda x: x*30, range(n/2))
+    #x += ( map(lambda x: x*30*4, range(n/2,n)) )
     #x = range(n)
+    x = map(lambda x: x*150, range(n))
     return x
 
 def getAttrib( flowID , attrib , fs ):
