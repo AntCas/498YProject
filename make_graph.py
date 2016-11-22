@@ -71,8 +71,8 @@ def part():
 
     plt.plot(x,rts0, label="RTS/CTS 1")
     plt.plot(x,norts0, label="No RTS/CTS 1")
-    plt.plot(x,rts0, label="RTS/CTS 2")
-    plt.plot(x,norts0, label="No RTS/CTS 2")
+    plt.plot(x,rts1, label="RTS/CTS 2")
+    plt.plot(x,norts1, label="No RTS/CTS 2")
 
     plt.title("Delay")
     plt.xlabel("CBR")

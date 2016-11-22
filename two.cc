@@ -139,7 +139,7 @@ int main(int argc, char** argv) {
 
 #define S 5 // seconds
 #define M 30 // freq
-#define MM 4 // freq
+#define MM 6 // freq
 #define L 25 // num loops
 
   for ( int ii = 1; ii < L; ii++ ) {
