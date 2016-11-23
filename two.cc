@@ -118,7 +118,7 @@ void run_experiment_2 (bool do_rts, int cbr, int seconds, std::string log_name) 
   PacketSinkHelper sink = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port));
   apps.Add( sink.Install(staNodes.Get(1)) );
   // CBR 2
-  PacketSinkHelper sink2 = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port));
+  PacketSinkHelper sink2 = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.4"), port));
   apps.Add( sink2.Install(staNodes.Get(3)) );
   apps.Start(Seconds(0.0));
   apps.Stop(Seconds((int)seconds));
