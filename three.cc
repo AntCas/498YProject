@@ -21,18 +21,15 @@ NS_LOG_COMPONENT_DEFINE("PartOne");
 std::ofstream g_cur_logs;
 
 
-void run_experiment_2 (bool do_rts, int cbr, int seconds, std::string log_name) {
+void run_experiment_3 (bool do_hack, int cbr, int seconds, std::string log_name) {
   g_cur_logs.open(log_name);
 
   printf(" **** Running for %d seconds with %dkb/s cbr and %s ****\n",
     seconds, cbr,
-    do_rts ? "RTS enabled" : "RTS disabled");
+    do_hack ? "HACK ENABLED" : "Hack disabled");
   
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("999992200"));
-  if (do_rts)
-    Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("0"));
-  else
-    Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("999999999"));
+  Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("999999999"));
 
 
   // Nodes
@@ -51,7 +48,10 @@ void run_experiment_2 (bool do_rts, int cbr, int seconds, std::string log_name) 
 
   //WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
-  wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
+  if ( do_hack )
+    wifi.SetStandard (WIFI_PHY_STANDARD_80211b_HACKED);
+  else
+    wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
   wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",
     "DataMode",StringValue ("DsssRate11Mbps"), 
     "ControlMode",StringValue ("DsssRate11Mbps"));
@@ -140,15 +140,14 @@ int main(int argc, char** argv) {
   std::cout << "Main starting.\n";
 
 #define S 5 // seconds
-#define M 150 // freq
-#define L 25 // num loops
+#define M 200 // freq
+#define L 30 // num loops
 
   for ( int ii = 1; ii < L; ii++ ) {
-      run_experiment_2(true, ii*M, S, "rtscts/" + std::to_string(ii));
+      run_experiment_3(false, ii*M, S, "three/" + std::to_string(ii));
   }
   for ( int ii = 1; ii < L; ii++ ) {
-      run_experiment_2(false, ii*M, S, "no_rtscts/" + std::to_string(ii));
+      run_experiment_3(true, ii*M, S, "three_hacked/" + std::to_string(ii));
   }
-
 }
 

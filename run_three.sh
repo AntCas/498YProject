@@ -1,10 +1,10 @@
 #NS_LOG='PartOne:level_info' 498YProject/498YProject 
 
-mkdir rtscts
-mkdir no_rtscts
-rm rtscts/*
-rm no_rtscts/*
+mkdir three
+mkdir three_hacked
+rm three/*
+rm three_hacked/*
 ../../build/scratch/498YProject/498YProject
 
-python2 make_graph.py
+python2 make_graph_3.py
 
