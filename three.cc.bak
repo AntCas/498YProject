@@ -14,18 +14,20 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("PartOne");
 
+std::ofstream g_cur_logs;
 
 
-void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name) {
+void run_experiment_3 (bool do_hack, int cbr, int seconds, std::string log_name) {
+  g_cur_logs.open(log_name);
 
-  printf(" **** Running for %d seconds with %dkb/s cbr_12 and %dkb/s cbr_3 ****\n", seconds, cbr_12, cbr_3);
+  printf(" **** Running for %d seconds with %dkb/s cbr and %s ****\n",
+    seconds, cbr,
+    do_hack ? "HACK ENABLED" : "Hack disabled");
   
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("999992200"));
   Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("999999999"));
@@ -34,10 +36,8 @@ void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name)
   // Nodes
   NS_LOG_INFO("Nodes.");
   NodeContainer staNodes;
-  NodeContainer staHackedNodes;
   NodeContainer apNodes;
   staNodes.Create(4);
-  staHackedNodes.Create(2);
   apNodes.Create(1);
 
   NS_LOG_INFO("Wifi.");
@@ -47,16 +47,13 @@ void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name)
 
   phy.Set("TxGain", DoubleValue(-3.0));
 
-  // Wifi
+  //WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
-  wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
+  if ( do_hack )
+    wifi.SetStandard (WIFI_PHY_STANDARD_80211b_HACKED);
+  else
+    wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
   wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",
-    "DataMode",StringValue ("DsssRate11Mbps"), 
-    "ControlMode",StringValue ("DsssRate11Mbps"));
-  // Wifi Hacked
-  WifiHelper wifiHacked;
-  wifiHacked.SetStandard (WIFI_PHY_STANDARD_80211b_HACKED);
-  wifiHacked.SetRemoteStationManager("ns3::ConstantRateWifiManager",
     "DataMode",StringValue ("DsssRate11Mbps"), 
     "ControlMode",StringValue ("DsssRate11Mbps"));
   WifiMacHelper mac;
@@ -68,17 +65,15 @@ void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name)
   NetDeviceContainer staDevices;
   staDevices = wifi.Install(phy,mac, staNodes);
 
-  NetDeviceContainer staHackedDevices;
-  staHackedDevices = wifiHacked.Install(phy,mac, staHackedNodes);
-
+  // AP
+  NS_LOG_INFO("AP.");
   mac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid));
   NetDeviceContainer apDevices;
   apDevices = wifi.Install(phy,mac,apNodes);
 
   // Positioning
-  // For part three, the positions are in a circle with winding: A B C D X Y
   // With TxGain:-3.0, falloff is around 40-60 meters
-  double d= 9.0; // meters
+  double d= 5.0; // meters
   MobilityHelper mobility;
   // AP
   Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
@@ -88,53 +83,46 @@ void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name)
   mobility.Install(apNodes);
   // Standard STA
   positionAlloc = CreateObject<ListPositionAllocator> ();
-   // A B C D
+  double th = 0.0;
   for (int ii = 0; ii < 4; ii++) {
-    double theta = 2.0*M_PI*((double)ii)/6.0;
-    positionAlloc->Add(Vector( cos(theta)*d , sin(theta)*d ,0.0));
+    double theta = 2*M_PI*((double)ii)/6.0;
+    positionAlloc->Add(Vector( cos(theta)*d , sin(theta)*d ,0.0));; // A
   }
   mobility.SetPositionAllocator(positionAlloc);
   mobility.Install(staNodes);
   // Hacked STA
   positionAlloc = CreateObject<ListPositionAllocator> ();
-   // X Y
-  for (int ii = 4; ii < 6; ii++) {
-    double theta = 2.0*M_PI*((double)ii)/6.0;
-    positionAlloc->Add(Vector( cos(theta)*d , sin(theta)*d ,0.0));
+  double th = 0.0;
+  for (int ii = 0; ii < 4; ii++) {
+    double theta = 2*M_PI*((double)ii)/6.0;
+    positionAlloc->Add(Vector( cos(theta)*d , sin(theta)*d ,0.0));; // A
   }
   mobility.SetPositionAllocator(positionAlloc);
-  mobility.Install(staHackedNodes);
+  mobility.Install(staNodes);
 
   // Protocol stack
   NS_LOG_INFO("Stack.");
   InternetStackHelper stack;
   stack.Install(staNodes);
-  stack.Install(staHackedNodes);
   stack.Install(apNodes);
 
   Ipv4AddressHelper addr;
   addr.SetBase("10.0.0.0", "255.255.255.0");
   addr.Assign(staDevices);
-  addr.Assign(staHackedDevices);
   addr.Assign(apDevices);
 
   int port = 12345;
   // A -> B
   OnOffHelper onoff("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.2"), port)); // to node 1
   onoff.SetAttribute ("PacketSize", UintegerValue (2000));
-  onoff.SetConstantRate(DataRate( std::to_string(cbr_12) + "kb/s"));
+  onoff.SetConstantRate(DataRate( std::to_string(cbr) + "kb/s"));
   ApplicationContainer apps;
   apps.Add(onoff.Install(staNodes.Get(0))); // from node 0
   // C -> D
   OnOffHelper onoff2("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.4"), port)); // to node 1
   onoff2.SetAttribute ("PacketSize", UintegerValue (2000));
-  onoff2.SetConstantRate(DataRate( std::to_string(cbr_12) + "kb/s"));
+  onoff2.SetConstantRate(DataRate( std::to_string(cbr) + "kb/s"));
   apps.Add(onoff2.Install(staNodes.Get(2))); // from node 2
-  // X -> Y
-  OnOffHelper onoff3("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.5"), port)); // to node 1
-  onoff3.SetAttribute ("PacketSize", UintegerValue (2000));
-  onoff3.SetConstantRate(DataRate( std::to_string(cbr_3) + "kb/s"));
-  apps.Add(onoff3.Install(staHackedNodes.Get(0))); // from node 0
 
 
   NS_LOG_INFO("Sock Sink.");
@@ -144,10 +132,6 @@ void run_experiment_3 (int cbr_12, int cbr_3, int seconds, std::string log_name)
   // CBR 2
   PacketSinkHelper sink2 = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.4"), port));
   apps.Add( sink2.Install(staNodes.Get(3)) );
-  // CBR 3
-  PacketSinkHelper sink3 = PacketSinkHelper("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address ("10.0.0.6"), port));
-  apps.Add( sink3.Install(staHackedNodes.Get(1)) );
-
   apps.Start(Seconds(0.0));
   apps.Stop(Seconds((int)seconds));
 
@@ -167,23 +151,15 @@ int main(int argc, char** argv) {
   Time::SetResolution(Time::NS);
   std::cout << "Main starting.\n";
 
-  // cbr 1,2
 #define S 5 // seconds
-#define M 1500 // freq
-#define L 1 // num loops
+#define M 100 // freq
+#define L 30 // num loops
 
-  // cbr 3
-#define MM 100 // freq
-#define LL 40 // num loops
-
-  for (int ii = 1; ii <= L; ii++) {
-    for ( int jj = 1; jj < LL; jj++ ) {
-      //std::string fn = "./three/" + std::to_string(ii*M) + "/" + std::to_string(jj*MM);
-      std::string fn = "three/" + std::to_string(ii*M) + "_" + std::to_string(jj*MM);
-      //boost::filesystem::path dir(fn);
-      //boost::filesystem::create_directory(dir);
-      run_experiment_3(ii*M, jj*MM, S, fn);
-    }
+  for ( int ii = 1; ii < L; ii++ ) {
+      run_experiment_3(false, ii*M, S, "three/" + std::to_string(ii));
+  }
+  for ( int ii = 1; ii < L; ii++ ) {
+      run_experiment_3(true, ii*M, S, "three_hacked/" + std::to_string(ii));
   }
 }
 
