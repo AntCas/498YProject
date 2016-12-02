@@ -170,7 +170,7 @@ int main(int argc, char** argv) {
   // cbr 1,2
 #define S 5 // seconds
 #define M 1500 // freq
-#define L 1 // num loops
+#define L 5 // num loops
 
   // cbr 3
 #define MM 100 // freq
