@@ -49,7 +49,7 @@ void run_experiment_2 (bool do_rts, int cbr, int seconds, std::string log_name) 
 
   phy.Set("TxGain", DoubleValue(-3.0));
 
-  //WifiHelper wifi = WifiHelper::Default();
+  // WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
   wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
   wifi.SetRemoteStationManager("ns3::ConstantRateWifiManager",
