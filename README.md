@@ -1,7 +1,4 @@
- README.md 
-##########
-How to Run
-##########
+#How to Run
 
 ~$ ./waf build
 ~$ cd build/scratch
