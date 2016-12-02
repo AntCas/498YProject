@@ -83,7 +83,8 @@ def plotWithCBR12(cbr12):
     plt.xlabel("CBR 3")
     plt.ylabel("Delay Sum")
     plt.legend(loc=4)
-    plt.savefig('three/%s.png'%cbr12)
+    plt.gcf().set_size_inches(20,11)
+    plt.savefig('three/%s.png'%cbr12, dpi=100)
 
 for cbr12 in findAllCBR12():
     plotWithCBR12(cbr12)
