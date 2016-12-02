@@ -47,7 +47,7 @@ void run_experiment_3 (bool do_hack, int cbr, int seconds, std::string log_name)
 
   phy.Set("TxGain", DoubleValue(-3.0));
 
-  //WifiHelper wifi = WifiHelper::Default();
+  // WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
   if ( do_hack )
     wifi.SetStandard (WIFI_PHY_STANDARD_80211b_HACKED);

@@ -5,6 +5,7 @@ mkdir three
 rm three/*
 #rm three_hacked/*
 ../../build/scratch/498YProject/498YProject
+echo "running question 2"
 
 python2 make_graph_3.py
 
