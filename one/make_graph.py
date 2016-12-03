@@ -9,16 +9,6 @@ def mkX(n):
     #x = map(lambda x: x*30, range(n/2))
     #x += ( map(lambda x: x*30*4, range(n/2,n)) )
     #x = range(n)
-    """
-    x = []
-    acc = 0
-    for i in range(n):
-        if i < n/2:
-            acc += 50
-        else:
-            acc += 50*2
-        x.append(acc)
-    """
     x = map(lambda x: x*150, range(n))
     return x
 
@@ -36,10 +26,47 @@ def getAttrib( flowID , attrib , fs ):
                     ys.append(float(t))
     return ys
 
-def part():
-    rtsdir = 'rtscts/'
-    nortsdir = 'no_rtscts/'
-    plt.subplot(121)
+def partA():
+    rtsdir = 'a_rtscts/'
+    nortsdir = 'a_no_rtscts/'
+    plt.subplot(221)
+    # Plot throughputs first
+    rx0 = getAttrib('1', 'rxPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    rx1 = getAttrib('1', 'rxPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+
+    x = mkX(len(rx0))
+
+    plt.plot(x,rx0, label="RTS/CTS")
+    plt.plot(x,rx1, '--', label="No RTS/CTS")
+
+    plt.title("Throughput")
+    plt.xlabel("CBR")
+    plt.ylabel("Packets Recvd")
+    plt.legend(loc=4)
+
+    # Now plot delays
+    plt.subplot(222)
+    y0 = getAttrib('1', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    y1 = getAttrib('1', 'delaySum' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    tx0 = getAttrib('1', 'txPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
+    tx1 = getAttrib('1', 'txPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
+    # compute average
+    y0 = map(lambda ii: float(y0[ii]) / tx0[ii], range(len(y0)))
+    y1 = map(lambda ii: float(y1[ii]) / tx1[ii], range(len(y1)))
+
+    plt.plot(x,y0, label="RTS/CTS")
+    plt.plot(x,y1, '--',label="No RTS/CTS")
+
+    plt.title("Delay")
+    plt.xlabel("CBR")
+    plt.ylabel("Delay Sum")
+    plt.legend(loc=4)
+
+
+def partB():
+    rtsdir = 'b_rtscts/'
+    nortsdir = 'b_no_rtscts/'
+    plt.subplot(223)
     # Plot throughputs first
     rts0 = getAttrib('1', 'rxPackets' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
     norts0 = getAttrib('1', 'rxPackets' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
@@ -50,8 +77,8 @@ def part():
 
     plt.plot(x,rts0, label="RTS/CTS 1")
     plt.plot(x,norts0, label="No RTS/CTS 1", )
-    plt.plot(x,rts1, label="RTS/CTS 2")
-    plt.plot(x,norts1, label="No RTS/CTS 2", )
+    plt.plot(x,rts1, '--',label="RTS/CTS 2")
+    plt.plot(x,norts1, '--',label="No RTS/CTS 2", )
 
     plt.title("Throughput")
     plt.xlabel("CBR")
@@ -59,7 +86,7 @@ def part():
     plt.legend(loc=4)
 
     # Now plot delays
-    plt.subplot(122)
+    plt.subplot(224)
     rts0 = getAttrib('1', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
     norts0 = getAttrib('1', 'delaySum' , map(lambda x: nortsdir + x, os.listdir(nortsdir)) )
     rts1 = getAttrib('2', 'delaySum' , map(lambda x: rtsdir + x, os.listdir(rtsdir)) )
@@ -73,22 +100,19 @@ def part():
     norts0 = map(lambda ii: float(norts0[ii]) / norts_tx0[ii], range(len(norts0)))
     rts1 = map(lambda ii: float(rts1[ii]) / rts_tx1[ii], range(len(rts1)))
     norts1 = map(lambda ii: float(norts1[ii]) / norts_tx1[ii], range(len(norts1)))
-    #for i in range(len(y0)):
-    #    print("""  %d: 
-    #                  (rx0: %f)
-    #                  (rx1: %f)
-    #                  (y0: %f) (tx0: %f)
-    #                  (y1: %f) (tx1: %f)"""%(i,rx0[i],rx1[i],y0[i],tx0[i],y1[i],tx1[i]))
 
     plt.plot(x,rts0, label="RTS/CTS 1")
     plt.plot(x,norts0, label="No RTS/CTS 1")
-    plt.plot(x,rts1, label="RTS/CTS 2")
-    plt.plot(x,norts1, label="No RTS/CTS 2")
+    plt.plot(x,rts1, '--',label="RTS/CTS 2")
+    plt.plot(x,norts1, '--',label="No RTS/CTS 2")
 
     plt.title("Delay")
     plt.xlabel("CBR")
     plt.ylabel("Delay Sum")
     plt.legend(loc=4)
+    plt.gcf().set_size_inches(20,11)
+    plt.savefig('ONE.png', dpi=100)
 
-part()
-plt.show()
+
+partA()
+partB()

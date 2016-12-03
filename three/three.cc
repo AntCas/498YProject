@@ -169,12 +169,12 @@ int main(int argc, char** argv) {
 
   // cbr 1,2
 #define S 5 // seconds
-#define M 1500 // freq
-#define L 1 // num loops
+#define M 900 // freq
+#define L 3 // num loops
 
   // cbr 3
 #define MM 100 // freq
-#define LL 40 // num loops
+#define LL 25 // num loops
 
   for (int ii = 1; ii <= L; ii++) {
     for ( int jj = 1; jj < LL; jj++ ) {

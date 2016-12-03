@@ -16,7 +16,7 @@ def mkX(n):
             acc += 50*2
         x.append(acc)
     """
-    x = map(lambda x: x*150, range(n))
+    x = map(lambda x: x*100, range(n))
     return x
 
 def getAttrib( flowID , attrib , fs ):
@@ -34,6 +34,11 @@ def getAttrib( flowID , attrib , fs ):
     return ys
 
 from collections import defaultdict
+
+def findAllCBR12():
+    fs = os.listdir('three')
+    return set(map(lambda x: x.split('_')[0], fs))
+
 def plotWithCBR12(cbr12):
     cbr12 = str(cbr12)
     fs = filter( lambda x: x.split('_')[0] == cbr12, os.listdir('three') )
@@ -49,7 +54,7 @@ def plotWithCBR12(cbr12):
     x = map(lambda x: x*100, range(len(three2)))
     plt.plot(x,three2, '--', label="Three Hacked")
 
-    plt.title("Throughput")
+    plt.title("Throughput (CBR 1/2 = %s)"%cbr12)
     plt.xlabel("CBR 3")
     plt.ylabel("Packets Recvd")
     plt.legend(loc=4)
@@ -74,69 +79,13 @@ def plotWithCBR12(cbr12):
     x = map(lambda x: x*100, range(len(three2)))
     plt.plot(x,three2, '--', label="Three Hacked")
 
-    plt.title("Delay")
+    plt.title("Delay (CBR 1/2 = %s)"%cbr12)
     plt.xlabel("CBR 3")
     plt.ylabel("Delay Sum")
     plt.legend(loc=4)
+    plt.gcf().set_size_inches(20,11)
+    plt.savefig('three/%s.png'%cbr12, dpi=100)
 
-def part():
-    cbr12s = defaultdict(lambda x: 0)
-    fs = os.listdir('three')
-
-
-    threedir = 'three/'
-    three_h_dir = 'three_hacked/'
-    three0 = getAttrib('1', 'rxPackets' , map(lambda x: threedir + x, os.listdir(threedir)) )
-    three1 = getAttrib('2', 'rxPackets' , map(lambda x: threedir + x, os.listdir(threedir)) )
-    three_h0 = getAttrib('1', 'rxPackets' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-    three_h1 = getAttrib('2', 'rxPackets' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-
-    x = mkX(len(three0))
-
-    plt.subplot(121)
-    plt.plot(x,three0, label="Three 1")
-    plt.plot(x,three1, label="Three 2")
-
-    plt.plot(x,three_h0, '--', label="Three Hacked 1")
-    plt.plot(x,three_h1, '--', label="Three Hacked 2")
-
-    plt.title("Throughput")
-    plt.xlabel("CBR")
-    plt.ylabel("Packets Recvd")
-    plt.legend(loc=4)
-
-    # Now plot delays
-    plt.subplot(122)
-    three0 = getAttrib('1', 'delaySum' , map(lambda x: threedir + x, os.listdir(threedir)) )
-    three_tx0 = getAttrib('1', 'txPackets' , map(lambda x: threedir + x, os.listdir(threedir)) )
-    three1 = getAttrib('2', 'delaySum' , map(lambda x: threedir + x, os.listdir(threedir)) )
-    three_tx1 = getAttrib('2', 'txPackets' , map(lambda x: threedir + x, os.listdir(threedir)) )
-
-    three_h0 = getAttrib('1', 'delaySum' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-    three_h_tx0 = getAttrib('1', 'txPackets' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-    three_h1 = getAttrib('2', 'delaySum' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-    three_h_tx1 = getAttrib('2', 'txPackets' , map(lambda x: three_h_dir + x, os.listdir(three_h_dir)) )
-     # compute average
-    #three0 = map(lambda ii: float(three0[ii]) / three_tx0[ii], range(len(three0)))
-    #three1 = map(lambda ii: float(three1[ii]) / three_tx1[ii], range(len(three1)))
-    #three_h0 = map(lambda ii: float(three_h0[ii]) / three_h_tx0[ii], range(len(three_h0)))
-    #three_h1 = map(lambda ii: float(three_h1[ii]) / three_h_tx1[ii], range(len(three_h1)))
-    three0 = map(lambda ii: float(three0[ii]), range(len(three0)))
-    three1 = map(lambda ii: float(three1[ii]), range(len(three1)))
-    three_h0 = map(lambda ii: float(three_h0[ii]), range(len(three_h0)))
-    three_h1 = map(lambda ii: float(three_h1[ii]), range(len(three_h1)))
-
-    plt.plot(x,three0, label="Three 1")
-    plt.plot(x,three1, label="Three 2")
-    plt.plot(x,three_h0, '--', label="Three Hacked 1")
-    plt.plot(x,three_h1, '--', label="Three Hacked 2")
-
-    plt.title("Delay")
-    plt.xlabel("CBR")
-    plt.ylabel("Delay Sum")
-    plt.legend(loc=4)
-
-#part()
-
-plotWithCBR12(1500)
-plt.show()
+for cbr12 in findAllCBR12():
+    plotWithCBR12(cbr12)
+    plt.clf()
