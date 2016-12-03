@@ -178,8 +178,7 @@ int main(int argc, char** argv) {
 
   for (int ii = 1; ii <= L; ii++) {
     for ( int jj = 1; jj < LL; jj++ ) {
-      //std::string fn = "./three/" + std::to_string(ii*M) + "/" + std::to_string(jj*MM);
-      std::string fn = "three/" + std::to_string(ii*M) + "_" + std::to_string(jj*MM);
+      std::string fn = "three_data/" + std::to_string(ii*M) + "_" + std::to_string(jj*MM);
       //boost::filesystem::path dir(fn);
       //boost::filesystem::create_directory(dir);
       run_experiment_3(ii*M, jj*MM, S, fn);

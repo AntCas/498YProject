@@ -36,15 +36,15 @@ def getAttrib( flowID , attrib , fs ):
 from collections import defaultdict
 
 def findAllCBR12():
-    fs = os.listdir('three')
+    fs = os.listdir('three_data')
     return set(map(lambda x: x.split('_')[0], fs))
 
 def plotWithCBR12(cbr12):
     cbr12 = str(cbr12)
-    fs = filter( lambda x: x.split('_')[0] == cbr12, os.listdir('three') )
-    three0 = getAttrib('1', 'rxPackets' , map(lambda x: 'three/' + x, fs) )
-    three1 = getAttrib('2', 'rxPackets' , map(lambda x: 'three/' + x, fs) )
-    three2 = getAttrib('3', 'rxPackets' , map(lambda x: 'three/' + x, fs) )
+    fs = filter( lambda x: x.split('_')[0] == cbr12, os.listdir('three_data') )
+    three0 = getAttrib('1', 'rxPackets' , map(lambda x: 'three_data/' + x, fs) )
+    three1 = getAttrib('2', 'rxPackets' , map(lambda x: 'three_data/' + x, fs) )
+    three2 = getAttrib('3', 'rxPackets' , map(lambda x: 'three_data/' + x, fs) )
 
     plt.subplot(121)
     x = map(lambda x: x*100, range(len(three0)))
@@ -62,12 +62,12 @@ def plotWithCBR12(cbr12):
     # Now plot delays
     plt.subplot(122)
 
-    three0 = getAttrib('1', 'delaySum' , map(lambda x: 'three/' + x, fs) )
-    thrtx0 = getAttrib('1', 'txPackets' , map(lambda x: 'three/' + x, fs) )
-    three1 = getAttrib('2', 'delaySum' , map(lambda x: 'three/' + x, fs) )
-    three1 = getAttrib('2', 'delaySum' , map(lambda x: 'three/' + x, fs) )
-    thrtx2 = getAttrib('3', 'txPackets' , map(lambda x: 'three/' + x, fs) )
-    thrtx2 = getAttrib('3', 'txPackets' , map(lambda x: 'three/' + x, fs) )
+    three0 = getAttrib('1', 'delaySum' , map(lambda x: 'three_data/' + x, fs) )
+    thrtx0 = getAttrib('1', 'txPackets' , map(lambda x: 'three_data/' + x, fs) )
+    three1 = getAttrib('2', 'delaySum' , map(lambda x: 'three_data/' + x, fs) )
+    three1 = getAttrib('2', 'delaySum' , map(lambda x: 'three_data/' + x, fs) )
+    thrtx2 = getAttrib('3', 'txPackets' , map(lambda x: 'three_data/' + x, fs) )
+    thrtx2 = getAttrib('3', 'txPackets' , map(lambda x: 'three_data/' + x, fs) )
     three0 = map(lambda ii: float(three0[ii]), range(len(three0)))
     three1 = map(lambda ii: float(three1[ii]), range(len(three1)))
     three2 = map(lambda ii: float(three2[ii]), range(len(three2)))
@@ -84,7 +84,7 @@ def plotWithCBR12(cbr12):
     plt.ylabel("Delay Sum")
     plt.legend(loc=4)
     plt.gcf().set_size_inches(20,11)
-    plt.savefig('three/%s.png'%cbr12, dpi=100)
+    plt.savefig('three_data/%s.png'%cbr12, dpi=100)
 
 for cbr12 in findAllCBR12():
     plotWithCBR12(cbr12)
