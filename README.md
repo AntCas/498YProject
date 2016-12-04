@@ -20,7 +20,7 @@
 
    `cd <ns3-root>/scratch/ `
 
-   * copy this repository into the scratch directory
+   * copy the *contents* of this repository into the scratch directory
 
    * Run the setup script
    
@@ -28,7 +28,7 @@
 
    * Rebuild ns3
    
-   `../waf build`
+   `./waf build`
  
 
 ## Usage:
@@ -39,23 +39,21 @@
 
 2. Run the tests
 
-   `./498Y --do_rts=[true|false]`
+   `cd <ns3-root>/build/scratch`
 
-   `../waf build`
-
-   * Run test one
+   * Run test one (1-2 minutes)
    
    `cd one`
 
    `./run_one.sh`
 
-   * Run test two
+   * Run test two (1 minute)
    
    `cd two`
 
    `./run_two.sh`
 
-   * Run Test three
+   * Run Test three (6 minutes)
    
    `cd three`
 
