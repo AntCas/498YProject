@@ -4,56 +4,63 @@
 
    * clone the main ns3 project from https://github.com/nsnam/ns-3-dev-git
 
-`git clone https://github.com/nsnam/ns-3-dev-git`
+   `git clone https://github.com/nsnam/ns-3-dev-git`
 
    *  Make sure that the project builds without errors
    
-`./waf build`
+   `./waf build`
 
-2. Set up this project
+2. Install dependencies
+
+   You will need python2, numpy, and matplotlib installed in order to create a view the graphs. We used gnome-open to open .png files, you may need to sub in some other photo-viewer depending on your operating system if gnome-open is not available. We also used zsh's globbing syntax to find all .png files, which may need to be rewritenn using ```find ... -exec {} ...``` or opened manually.
+
+3. Set up this project
 
    * navigate to the scratch directory
 
-`cd <ns3-root>/scratch/ `
+   `cd <ns3-root>/scratch/ `
 
-   * copy this repository into the scract directory
+   * copy this repository into the scratch directory
 
    * Run the setup script
    
-`./modify_ns3_files.sh`
+   `./modify_ns3_files.sh`
 
-3. Have python2, numpy, and matplotlib installed. I used gnome-open to open .png files, you may need to sub in some photo-viewer. I also used zsh's globbing syntax to find all .png files, you may need to rewrite using ```find ... -exec {} ...``` or open manually.
+   * Rebuild ns3
+   
+   `../waf build`
+ 
 
 ## Usage:
 
-1. rebuild the project
+1. Rebuild the project
 
-`./waf build`
+   `./waf build`
 
 2. Run the tests
 
-`./498Y --do_rts=[true|false]`
+   `./498Y --do_rts=[true|false]`
 
-`../waf build`
+   `../waf build`
 
    * Run test one
    
-`cd one`
+   `cd one`
 
-`./run_one.sh`
+   `./run_one.sh`
 
    * Run test two
    
-`cd two`
+   `cd two`
 
-`./run_two.sh`
+   `./run_two.sh`
 
    * Run Test three
    
-`cd three`
+   `cd three`
 
-`./run_three.sh`
+   `./run_three.sh`
 
    * View the results
 
-`gnome-open **/**.png`
+   `gnome-open **/**.png`
