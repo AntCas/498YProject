@@ -39,9 +39,7 @@
 
 2. Run the tests
 
-   `./498Y --do_rts=[true|false]`
-
-   `../waf build`
+   `cd <ns3-root>/build/scratch`
 
    * Run test one
    
