@@ -1,4 +1,5 @@
 # How to Run
+### Setup
 
 1. Set up ns3 (if not already set up)
 
@@ -20,7 +21,7 @@
 
    `cd <ns3-root>/scratch/ `
 
-   * copy this repository into the scratch directory
+   * copy the *contents* of this repository into the scratch directory
 
    * Run the setup script
    
@@ -28,10 +29,10 @@
 
    * Rebuild ns3
    
-   `../waf build`
+   `./waf build`
  
 
-## Usage:
+### Running the Tests
 
 1. Rebuild the project
 
@@ -39,28 +40,30 @@
 
 2. Run the tests
 
-   `./498Y --do_rts=[true|false]`
+   `cd <ns3-root>/scratch`
 
-   `../waf build`
-
-   * Run test one
+   * Run test one (~2 minutes)
    
-   `cd one`
+   `cd one_`
 
    `./run_one.sh`
 
-   * Run test two
+   * Run test two (~1 minute)
    
-   `cd two`
+   `cd two_`
 
    `./run_two.sh`
 
-   * Run Test three
+   * Run test three (~5 minutes)
    
-   `cd three`
+   `cd three_`
 
    `./run_three.sh`
 
-   * View the results
-
-   `gnome-open **/**.png`
+   * Open the resulting image files to view the results
+   
+   `open one_/ONE.png`
+   
+   `open two_/TWO.png`
+   
+   `open three_/THREE.png`
