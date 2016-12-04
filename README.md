@@ -53,7 +53,7 @@
 
    `./run_two.sh`
 
-   * Run Test three (~5 minutes)
+   * Run test three (~5 minutes)
    
    `cd three_`
 
