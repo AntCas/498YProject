@@ -1,19 +1,25 @@
 # How to Run
 
-1. clone the main ns3 project from https://github.com/nsnam/ns-3-dev-git
+1. Set up ns3 (if not already set up)
+
+   * clone the main ns3 project from https://github.com/nsnam/ns-3-dev-git
 
 `git clone https://github.com/nsnam/ns-3-dev-git`
 
    *  Make sure that the project builds without errors
+   
 `./waf build`
+
+2. Set up this project
 
    * navigate to the scratch directory
 
-`cd ~/ns-3-dev-git/scratch`
+`cd <ns3-root>/scratch/ `
 
-2. Place this repo inside `<ns3-root>/scratch/ `
+   * copy this repository into the scract directory
 
    * Run the setup script
+   
 `./modify_ns3_files.sh`
 
 3. Have python2, numpy, and matplotlib installed. I used gnome-open to open .png files, you may need to sub in some photo-viewer. I also used zsh's globbing syntax to find all .png files, you may need to rewrite using ```find ... -exec {} ...``` or open manually.
