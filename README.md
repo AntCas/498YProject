@@ -5,7 +5,7 @@
 ~$ git clone https://github.com/nsnam/ns-3-dev-git
 
 1a) Make sure that the project builds without errors
-
+~$ ./waf build
 
 1b) navigate to the scratch directory
 
