@@ -20,7 +20,7 @@
 
    `cd <ns3-root>/scratch/ `
 
-   * copy this repository into the scratch directory
+   * copy the *contents* of this repository into the scratch directory
 
    * Run the setup script
    
@@ -28,7 +28,7 @@
 
    * Rebuild ns3
    
-   `../waf build`
+   `./waf build`
  
 
 ## Usage:
