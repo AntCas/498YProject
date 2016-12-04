@@ -31,12 +31,15 @@
 `../waf build`
 
 `cd one`
+
 `./run_one.sh`
 
 `cd two`
+
 `./run_two.sh`
 
 `cd three`
+
 `./run_three.sh`
 
-gnome-open **/**.png
+`gnome-open **/**.png`
