@@ -7,3 +7,6 @@ cp .hacked_files/wifi-phy-standard.h ../../src/wifi/model/wifi-phy-standard.h
 cp .hacked_files/wifi-phy.cc ../../src/wifi/model/wifi-phy.cc
 cp .hacked_files/wifi-phy.h ../../src/wifi/model/wifi-phy.h
 
+# Delete existing ns3 wifi build file if it exists
+rm -r ../../build/src/wifi
+
