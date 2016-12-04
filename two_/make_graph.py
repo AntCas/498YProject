@@ -52,6 +52,8 @@ def part():
     plt.plot(x,norts0, label="No RTS/CTS 1", )
     plt.plot(x,rts1, '--',label="RTS/CTS 2")
     plt.plot(x,norts1, '--',label="No RTS/CTS 2", )
+    plt.plot(x,map(lambda xy: xy[0]+xy[1], zip(norts0,norts1)), label="Average NO RTS")
+    plt.plot(x,map(lambda xy: xy[0]+xy[1], zip(rts0,rts1)), label="Average RTS")
 
     plt.title("Throughput")
     plt.xlabel("CBR")

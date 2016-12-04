@@ -160,6 +160,8 @@ void run_experiment_1b (bool do_rts, int cbr, int seconds, std::string log_name)
   YansWifiPhyHelper phy = YansWifiPhyHelper::Default();
   phy.SetChannel(chan.Create());
 
+  phy.Set("TxGain", DoubleValue(-3.0));
+
   //WifiHelper wifi = WifiHelper::Default();
   WifiHelper wifi;
   wifi.SetStandard (WIFI_PHY_STANDARD_80211b);
