@@ -41,19 +41,19 @@
 
    `cd <ns3-root>/scratch`
 
-   * Run test one (1-2 minutes)
+   * Run test one (~2 minutes)
    
    `cd one_`
 
    `./run_one.sh`
 
-   * Run test two (1 minute)
+   * Run test two (~1 minute)
    
    `cd two_`
 
    `./run_two.sh`
 
-   * Run Test three (6 minutes)
+   * Run Test three (~5 minutes)
    
    `cd three_`
 
