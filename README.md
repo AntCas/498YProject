@@ -4,31 +4,31 @@
 
    * clone the main ns3 project from https://github.com/nsnam/ns-3-dev-git
 
-`git clone https://github.com/nsnam/ns-3-dev-git`
+   `git clone https://github.com/nsnam/ns-3-dev-git`
 
    *  Make sure that the project builds without errors
    
-`./waf build`
+   `./waf build`
 
 2. Install dependencies
 
-You will need python2, numpy, and matplotlib installed. We used gnome-open to open .png files, you may need to sub in some other photo-viewer depending on your operating system if gnome-open is not available. We also used zsh's globbing syntax to find all .png files, which may need to be rewritenn using ```find ... -exec {} ...``` or opened manually.
+   You will need python2, numpy, and matplotlib installed. We used gnome-open to open .png files, you may need to sub in some other photo-viewer depending on your operating system if gnome-open is not available. We also used zsh's globbing syntax to find all .png files, which may need to be rewritenn using ```find ... -exec {} ...``` or opened manually.
 
 3. Set up this project
 
    * navigate to the scratch directory
 
-`cd <ns3-root>/scratch/ `
+   `cd <ns3-root>/scratch/ `
 
    * copy this repository into the scratch directory
 
    * Run the setup script
    
-`./modify_ns3_files.sh`
+   `./modify_ns3_files.sh`
 
    * Rebuild ns3
    
-`../waf build`
+   `../waf build`
  
 
 ## Usage:
@@ -45,22 +45,22 @@ You will need python2, numpy, and matplotlib installed. We used gnome-open to op
 
    * Run test one
    
-`cd one`
+   `cd one`
 
-`./run_one.sh`
+   `./run_one.sh`
 
    * Run test two
    
-`cd two`
+   `cd two`
 
-`./run_two.sh`
+   `./run_two.sh`
 
    * Run Test three
    
-`cd three`
+   `cd three`
 
-`./run_three.sh`
+   `./run_three.sh`
 
    * View the results
 
-`gnome-open **/**.png`
+   `gnome-open **/**.png`
