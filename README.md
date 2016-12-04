@@ -4,16 +4,16 @@
 
 `git clone https://github.com/nsnam/ns-3-dev-git`
 
-* Make sure that the project builds without errors
+   *  Make sure that the project builds without errors
 `./waf build`
 
-* navigate to the scratch directory
+   * navigate to the scratch directory
 
 `cd ~/ns-3-dev-git/scratch`
 
 2. Place this repo inside `<ns3-root>/scratch/ `
 
-* Run the setup script
+   * Run the setup script
 `./modify_ns3_files.sh`
 
 3. Have python2, numpy, and matplotlib installed. I used gnome-open to open .png files, you may need to sub in some photo-viewer. I also used zsh's globbing syntax to find all .png files, you may need to rewrite using ```find ... -exec {} ...``` or open manually.
@@ -30,16 +30,24 @@
 
 `../waf build`
 
+   * Run test one
+   
 `cd one`
 
 `./run_one.sh`
 
+   * Run test two
+   
 `cd two`
 
 `./run_two.sh`
 
+   * Run Test three
+   
 `cd three`
 
 `./run_three.sh`
+
+   * View the results
 
 `gnome-open **/**.png`
