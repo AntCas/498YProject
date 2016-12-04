@@ -1,4 +1,5 @@
 # How to Run
+### Setup
 
 1. Set up ns3 (if not already set up)
 
@@ -31,7 +32,7 @@
    `./waf build`
  
 
-## Usage:
+### Running the Tests
 
 1. Rebuild the project
 
