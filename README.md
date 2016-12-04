@@ -39,26 +39,30 @@
 
 2. Run the tests
 
-   `cd <ns3-root>/build/scratch`
+   `cd <ns3-root>/scratch`
 
    * Run test one (1-2 minutes)
    
-   `cd one`
+   `cd one_`
 
    `./run_one.sh`
 
    * Run test two (1 minute)
    
-   `cd two`
+   `cd two_`
 
    `./run_two.sh`
 
    * Run Test three (6 minutes)
    
-   `cd three`
+   `cd three_`
 
    `./run_three.sh`
 
-   * View the results
-
-   `gnome-open **/**.png`
+   * Open the resulting image files to view the results
+   
+   `open one_/ONE.png`
+   
+   `open two_/TWO.png`
+   
+   `open three_/THREE.png`
