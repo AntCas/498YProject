@@ -12,7 +12,7 @@
 
 2. Install dependencies
 
-   You will need python2, numpy, and matplotlib installed. We used gnome-open to open .png files, you may need to sub in some other photo-viewer depending on your operating system if gnome-open is not available. We also used zsh's globbing syntax to find all .png files, which may need to be rewritenn using ```find ... -exec {} ...``` or opened manually.
+   You will need python2, numpy, and matplotlib installed in order to create a view the graphs. We used gnome-open to open .png files, you may need to sub in some other photo-viewer depending on your operating system if gnome-open is not available. We also used zsh's globbing syntax to find all .png files, which may need to be rewritenn using ```find ... -exec {} ...``` or opened manually.
 
 3. Set up this project
 
@@ -33,7 +33,7 @@
 
 ## Usage:
 
-1. rebuild the project
+1. Rebuild the project
 
    `./waf build`
 
