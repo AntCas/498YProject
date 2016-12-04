@@ -6,4 +6,3 @@ cp .hacked_files/wifi-mac.h ../src/wifi/model/wifi-mac.h
 cp .hacked_files/wifi-phy-standard.h ../src/wifi/model/wifi-phy-standard.h
 cp .hacked_files/wifi-phy.cc ../src/wifi/model/wifi-phy.cc
 cp .hacked_files/wifi-phy.h ../src/wifi/model/wifi-phy.h
-
