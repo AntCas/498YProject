@@ -35,13 +35,13 @@
 
 1. rebuild the project
 
-`./waf build`
+   `./waf build`
 
 2. Run the tests
 
-`./498Y --do_rts=[true|false]`
+   `./498Y --do_rts=[true|false]`
 
-`../waf build`
+   `../waf build`
 
    * Run test one
    
